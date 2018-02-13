@@ -98,8 +98,8 @@ bool Application::HandleStart()
 
 	m_bWireframe = false;
 
-	m_pHeightMap = new HeightMap( "Resources/heightmap.bmp", 2.0f, &m_drawHeightMapShader );
-	m_pAeroplane = new Aeroplane( 0.0f, 3.5f, 0.0f, 105.0f );
+	m_pHeightMap = new HeightMap("Resources/heightmap.bmp", 2.0f, &m_drawHeightMapShader);
+	m_pAeroplane = new Aeroplane(0.0f, 3.5f, 0.0f, 105.0f);
 
 	m_pAeroplaneDefaultMeshes = AeroplaneMeshes::Load();
 	if (!m_pAeroplaneDefaultMeshes)
@@ -108,8 +108,8 @@ bool Application::HandleStart()
 	// And the shadow copy.
 	//
 	// For a larger-scale project, with more complicated meshes, there would
-    // probably be simplified meshes used for drawing the shadows. This example
-    // just draws the same meshes using a different shader.
+	// probably be simplified meshes used for drawing the shadows. This example
+	// just draws the same meshes using a different shader.
 	m_pAeroplaneShadowMeshes = AeroplaneMeshes::Load();
 	if (!m_pAeroplaneShadowMeshes)
 		return false;
@@ -126,7 +126,7 @@ bool Application::HandleStart()
 	m_cameraState = CAMERA_MAP;
 
 	m_pShadowCastingLightMesh = CommonMesh::NewSphereMesh(this, 1.0f, 16, 16);
-		
+
 	return true;
 }
 
@@ -168,11 +168,11 @@ void Application::HandleUpdate()
 {
 	m_rotationAngle += m_rotationSpeed;
 
-	if( m_cameraState == CAMERA_MAP )
+	if (m_cameraState == CAMERA_MAP)
 	{
 		if (this->IsKeyPressed('Q'))
 			m_cameraZ -= 2.0f;
-		
+
 		if (this->IsKeyPressed('A'))
 			m_cameraZ += 2.0f;
 
@@ -180,9 +180,9 @@ void Application::HandleUpdate()
 
 		if (this->IsKeyPressed(VK_SPACE))
 		{
-			if( !dbS )
+			if (!dbS)
 			{
-				if( m_rotationSpeed == 0.0f )
+				if (m_rotationSpeed == 0.0f)
 					m_rotationSpeed = 0.01f;
 				else
 					m_rotationSpeed = 0.0f;
@@ -196,14 +196,14 @@ void Application::HandleUpdate()
 		}
 	}
 
-	
+
 	static bool dbC = false;
 
-	if (this->IsKeyPressed('C') )	
+	if (this->IsKeyPressed('C'))
 	{
-		if( !dbC )
+		if (!dbC)
 		{
-			if( ++m_cameraState == CAMERA_MAX )
+			if (++m_cameraState == CAMERA_MAX)
 				m_cameraState = CAMERA_MAP;
 
 			dbC = true;
@@ -214,34 +214,34 @@ void Application::HandleUpdate()
 		dbC = false;
 	}
 
-	if( m_cameraState != CAMERA_PLANE && m_cameraState != CAMERA_GUN )
+	if (m_cameraState != CAMERA_PLANE && m_cameraState != CAMERA_GUN)
 	{
-		if( this->IsKeyPressed(VK_LEFT) )
-			m_shadowCastingLightPosition.x+=.2f;
+		if (this->IsKeyPressed(VK_LEFT))
+			m_shadowCastingLightPosition.x += .2f;
 
-		if( this->IsKeyPressed(VK_RIGHT) )
-			m_shadowCastingLightPosition.x-=.2f;
+		if (this->IsKeyPressed(VK_RIGHT))
+			m_shadowCastingLightPosition.x -= .2f;
 
-		if( this->IsKeyPressed(VK_UP ) )
-			m_shadowCastingLightPosition.z+=.2f;
+		if (this->IsKeyPressed(VK_UP))
+			m_shadowCastingLightPosition.z += .2f;
 
-		if( this->IsKeyPressed(VK_DOWN ) )
-			m_shadowCastingLightPosition.z-=.2f;
+		if (this->IsKeyPressed(VK_DOWN))
+			m_shadowCastingLightPosition.z -= .2f;
 
-		if( this->IsKeyPressed(VK_PRIOR ) )
-			m_shadowCastingLightPosition.y-=.2f;
+		if (this->IsKeyPressed(VK_PRIOR))
+			m_shadowCastingLightPosition.y -= .2f;
 
-		if( this->IsKeyPressed(VK_NEXT ) )
-			m_shadowCastingLightPosition.y+=.2f;
+		if (this->IsKeyPressed(VK_NEXT))
+			m_shadowCastingLightPosition.y += .2f;
 	}
 
 	static bool dbW = false;
-	if (this->IsKeyPressed('W') )	
+	if (this->IsKeyPressed('W'))
 	{
-		if( !dbW )
+		if (!dbW)
 		{
 			m_bWireframe = !m_bWireframe;
-			this->SetRasterizerState( false, m_bWireframe );
+			this->SetRasterizerState(false, m_bWireframe);
 			dbW = true;
 		}
 	}
@@ -250,8 +250,8 @@ void Application::HandleUpdate()
 		dbW = false;
 	}
 
-	
-	m_pAeroplane->Update( m_cameraState != CAMERA_MAP );
+
+	m_pAeroplane->Update(m_cameraState != CAMERA_MAP);
 
 }
 
@@ -273,13 +273,13 @@ void Application::HandleRender()
 void Application::RenderShadow()
 {
 	// Only the alpha channel is relevant, but clear the RGB channels to white
-    // so that it's easy to see what's going on.
-	float clearColour[4] = {0.f, 0.f, 0.f, 0.f};
+	// so that it's easy to see what's going on.
+	float clearColour[4] = { 0.f, 0.f, 0.f, 0.f };
 	m_pD3DDeviceContext->ClearRenderTargetView(m_pRenderTargetColourTargetView, clearColour);
 	m_pD3DDeviceContext->ClearDepthStencilView(m_pRenderTargetDepthStencilTargetView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	m_pD3DDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetColourTargetView, m_pRenderTargetDepthStencilTargetView);
 
-	D3D11_VIEWPORT viewport = {0.f, 0.f, RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT, 0.f, 1.f};
+	D3D11_VIEWPORT viewport = { 0.f, 0.f, RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT, 0.f, 1.f };
 	m_pD3DDeviceContext->RSSetViewports(1, &viewport);
 
 	XMFLOAT4 vTemp = m_pAeroplane->GetPosition();
@@ -291,20 +291,37 @@ void Application::RenderShadow()
 	float fovy = 0.8f;
 	float zn = 1.0f;
 	float zf = 1000.0f;
-	float aspect = 1.2f;
+	float aspect = RENDER_TARGET_WIDTH/ RENDER_TARGET_HEIGHT;
 	// You will find the following constants (defined above) useful:
 	// RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT, AEROPLANE_RADIUS
 	//*************************************************************************
+	XMFLOAT3 farPos, nearPos;
+	XMVECTOR nearVec, farVec;
+	XMVECTOR lightPos = XMLoadFloat3(&m_shadowCastingLightPosition);
+	XMVECTOR lightDir = XMVector3Normalize(vPlanePos - lightPos);
+	farVec = (vPlanePos + (AEROPLANE_RADIUS * lightDir));
+	nearVec = (vPlanePos + (AEROPLANE_RADIUS * -lightDir));
+	
+	farVec = lightPos - farVec;
+	nearVec = lightPos - nearVec;
+	farVec = XMVector3Length(farVec);
+	nearVec = XMVector3Length(nearVec);
+
+	XMStoreFloat3(&nearPos, nearVec);
+	XMStoreFloat3(&farPos, farVec);
+	zf = farPos.x;
+	zn = nearPos.x;
+	fovy = atan2(RENDER_TARGET_HEIGHT,zf);
 
 	XMMATRIX projMtx;
 	projMtx = XMMatrixPerspectiveFovLH(fovy, aspect, zn, zf);
 	this->SetProjectionMatrix(projMtx);
 
 	XMMATRIX viewMtx;
-	viewMtx = XMMatrixLookAtLH(XMLoadFloat3(&m_shadowCastingLightPosition), vPlanePos, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) );
+	viewMtx = XMMatrixLookAtLH(XMLoadFloat3(&m_shadowCastingLightPosition), vPlanePos, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 	this->SetViewMatrix(viewMtx);
 
-	m_shadowMtx = XMMatrixMultiply(viewMtx, projMtx );
+	m_shadowMtx = XMMatrixMultiply(viewMtx, projMtx);
 
 	D3DXMATRIX worldMtx;
 	D3DXMatrixIdentity(&worldMtx);
@@ -312,7 +329,7 @@ void Application::RenderShadow()
 
 	this->SetDepthStencilState(true);
 	this->SetRasterizerState(false, false);
-	
+
 	m_pAeroplane->Draw(m_pAeroplaneShadowMeshes);
 
 	this->SetDefaultRenderTarget();
@@ -323,42 +340,42 @@ void Application::RenderShadow()
 
 void Application::Render3D()
 {
-	this->SetRasterizerState( false, m_bWireframe );
+	this->SetRasterizerState(false, m_bWireframe);
 
 	this->SetDepthStencilState(true);
 
 	XMVECTOR vCamera = XMVectorZero();
 	XMVECTOR vLookat = XMVectorZero();;
-    XMVECTOR vUpVector = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	XMVECTOR vUpVector = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 	XMFLOAT4 vPlanePos = m_pAeroplane->GetPosition();
 	XMFLOAT4 vCamPos = m_pAeroplane->GetCameraPosition();
 	XMFLOAT4 vFocusPos = m_pAeroplane->GetPosition();
 
-	switch( m_cameraState )
+	switch (m_cameraState)
 	{
-		case CAMERA_MAP:
-			vCamera = XMVectorSet(sin(m_rotationAngle)*m_cameraZ, m_cameraZ/3 + 4, cos(m_rotationAngle)*m_cameraZ, 0.0f);
-			vLookat = XMVectorSet(0.0f, 2.0f, 0.0f, 0.0f);
-			break;
-		case CAMERA_PLANE:
-			m_pAeroplane->SetGunCamera( false );
-			vCamera = XMLoadFloat4(&vCamPos);
-			vLookat = XMLoadFloat4(&vFocusPos);
-			break;
-		case CAMERA_GUN:
-			m_pAeroplane->SetGunCamera( true );
-			vCamera = XMLoadFloat4(&vCamPos);
-			vLookat = XMLoadFloat4(&vFocusPos);
-			break;
-		case CAMERA_LIGHT:
-			vCamera = XMLoadFloat3(&m_shadowCastingLightPosition);
-			vLookat = XMLoadFloat4(&vPlanePos);
-			break;
-			
+	case CAMERA_MAP:
+		vCamera = XMVectorSet(sin(m_rotationAngle)*m_cameraZ, m_cameraZ / 3 + 4, cos(m_rotationAngle)*m_cameraZ, 0.0f);
+		vLookat = XMVectorSet(0.0f, 2.0f, 0.0f, 0.0f);
+		break;
+	case CAMERA_PLANE:
+		m_pAeroplane->SetGunCamera(false);
+		vCamera = XMLoadFloat4(&vCamPos);
+		vLookat = XMLoadFloat4(&vFocusPos);
+		break;
+	case CAMERA_GUN:
+		m_pAeroplane->SetGunCamera(true);
+		vCamera = XMLoadFloat4(&vCamPos);
+		vLookat = XMLoadFloat4(&vFocusPos);
+		break;
+	case CAMERA_LIGHT:
+		vCamera = XMLoadFloat3(&m_shadowCastingLightPosition);
+		vLookat = XMLoadFloat4(&vPlanePos);
+		break;
+
 	}
 
-    XMMATRIX  matView;
+	XMMATRIX  matView;
 	matView = XMMatrixLookAtLH(vCamera, vLookat, vUpVector);
 
 	XMMATRIX matProj;
@@ -367,14 +384,14 @@ void Application::Render3D()
 	this->SetViewMatrix(matView);
 	this->SetProjectionMatrix(matProj);
 
-	this->EnablePointLight(0, m_shadowCastingLightPosition, XMFLOAT3(1.0f, 1.0f, 1.0f) );
+	this->EnablePointLight(0, m_shadowCastingLightPosition, XMFLOAT3(1.0f, 1.0f, 1.0f));
 	this->SetLightAttenuation(0, 200.f, 2.f, 2.f, 2.f);
 	this->EnableDirectionalLight(1, XMFLOAT3(-1.f, -1.f, -1.f), XMFLOAT3(0.65f, 0.55f, 0.65f));
 
 	this->Clear(XMFLOAT4(.2f, .2f, .6f, 1.f));
 
 	D3DXMATRIX  matWorld;
-	D3DXMatrixIdentity( &matWorld );
+	D3DXMatrixIdentity(&matWorld);
 	this->SetWorldMatrix(matWorld);
 
 	{
@@ -414,9 +431,9 @@ void Application::Render3D()
 	}
 
 	m_pAeroplane->Draw(m_pAeroplaneDefaultMeshes);
-	
+
 	D3DXMATRIX worldMtx;
-	D3DXMatrixTranslation(&worldMtx, m_shadowCastingLightPosition.x,  m_shadowCastingLightPosition.y,  m_shadowCastingLightPosition.z);
+	D3DXMatrixTranslation(&worldMtx, m_shadowCastingLightPosition.x, m_shadowCastingLightPosition.y, m_shadowCastingLightPosition.z);
 	this->SetWorldMatrix(worldMtx);
 	m_pShadowCastingLightMesh->Draw();
 }
@@ -454,7 +471,7 @@ void Application::Render2D()
 bool Application::CreateRenderTarget()
 {
 	// Create render target texture, and two views for it - one for using it as
-    // a render target, and one for using it as a texture.
+	// a render target, and one for using it as a texture.
 	{
 		HRESULT hr;
 
@@ -566,7 +583,7 @@ bool Application::CreateRenderTarget()
 		sd.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
 
 		// Use BORDER addressing, so that anything outside the area the shadow
-        // texture casts on can be given a specific fixed colour.
+		// texture casts on can be given a specific fixed colour.
 		sd.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
 		sd.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
 		sd.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
@@ -595,7 +612,7 @@ bool Application::CreateRenderTarget()
 //////////////////////////////////////////////////////////////////////
 
 
-int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	Application application;
 

@@ -108,16 +108,16 @@ void PSMain(const PSInput input, out PSOutput output)
 	float4 lightSpace = mul(input.posWorld, g_shadowMatrix);
 	// Perform perspective correction
 	lightSpace /= lightSpace.w;
-	const float x = (lightSpace.x + 1) / 2;
-	const float y = (lightSpace.y + 1) / 2;
-	lightSpace.x = x;
-	lightSpace.y = y;
-
+	lightSpace.x = (lightSpace.x + 1.0) / 2.0;
+	lightSpace.y = (lightSpace.y + 1.0) / 2.0;
+	
 	// Scale and offset uvs into 0-1 range.
 	lightSpace.y = 1 - lightSpace.y;
-
+	
+	//lightSpace.xy= clamp(lightSpace.xy, float2(0, 0), float2(1, 1));
+	
 	// Sample render target to see if this pixel is in shadow
-	const float lerpS= (g_shadowTexture.Sample(g_shadowSampler, lightSpace.xy)).x;
+	const float lerpS = (g_shadowTexture.Sample(g_shadowSampler, lightSpace.xy)).x;
 
 	// If it is then alpha blend between final colour and shadow colour
 	output.colour = lerp(input.colour, g_shadowColour, lerpS);
