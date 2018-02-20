@@ -291,7 +291,7 @@ void Application::RenderShadow()
 	float fovy = 0.8f;
 	float zn = 1.0f;
 	float zf = 1000.0f;
-	float aspect = RENDER_TARGET_WIDTH/ RENDER_TARGET_HEIGHT;
+	float aspect = RENDER_TARGET_WIDTH / RENDER_TARGET_HEIGHT;
 	// You will find the following constants (defined above) useful:
 	// RENDER_TARGET_WIDTH, RENDER_TARGET_HEIGHT, AEROPLANE_RADIUS
 	//*************************************************************************
@@ -301,9 +301,10 @@ void Application::RenderShadow()
 	XMVECTOR lightDir = XMVector3Normalize(vPlanePos - lightPos);
 	farVec = (vPlanePos + (AEROPLANE_RADIUS * lightDir));
 	nearVec = (vPlanePos + (AEROPLANE_RADIUS * -lightDir));
-	
+
 	farVec = lightPos - farVec;
 	nearVec = lightPos - nearVec;
+
 	farVec = XMVector3Length(farVec);
 	nearVec = XMVector3Length(nearVec);
 
@@ -311,8 +312,9 @@ void Application::RenderShadow()
 	XMStoreFloat3(&farPos, farVec);
 	zf = farPos.x;
 	zn = nearPos.x;
-	fovy = atan2(RENDER_TARGET_HEIGHT,zf);
-
+	fovy = atan2(RENDER_TARGET_HEIGHT, zn);
+	
+	dprintf("%f\n", fovy);
 	XMMATRIX projMtx;
 	projMtx = XMMatrixPerspectiveFovLH(fovy, aspect, zn, zf);
 	this->SetProjectionMatrix(projMtx);
