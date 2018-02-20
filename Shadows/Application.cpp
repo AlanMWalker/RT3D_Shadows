@@ -312,8 +312,8 @@ void Application::RenderShadow()
 	XMStoreFloat3(&farPos, farVec);
 	zf = farPos.x;
 	zn = nearPos.x;
-	fovy = atan2(RENDER_TARGET_HEIGHT, zn);
-	
+	fovy = atan2(AEROPLANE_RADIUS * 2, zn);
+
 	dprintf("%f\n", fovy);
 	XMMATRIX projMtx;
 	projMtx = XMMatrixPerspectiveFovLH(fovy, aspect, zn, zf);

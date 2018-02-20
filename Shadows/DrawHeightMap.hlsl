@@ -106,6 +106,11 @@ void PSMain(const PSInput input, out PSOutput output)
 
 	// Transform the pixel into light space
 	float4 lightSpace = mul(input.posWorld, g_shadowMatrix);
+	if (lightSpace.z < 0)
+	{
+		output.colour = input.colour;
+		return;
+	}
 	// Perform perspective correction
 	lightSpace /= lightSpace.w;
 	lightSpace.x = (lightSpace.x + 1.0) / 2.0;
@@ -121,4 +126,5 @@ void PSMain(const PSInput input, out PSOutput output)
 
 	// If it is then alpha blend between final colour and shadow colour
 	output.colour = lerp(input.colour, g_shadowColour, lerpS);
+
 }
